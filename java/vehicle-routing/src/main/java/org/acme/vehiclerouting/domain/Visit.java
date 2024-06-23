@@ -23,10 +23,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @JsonIdentityInfo(scope = Visit.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @PlanningEntity
 public class Visit {
+    private static final String BREAK_VISIT = "Break";
+    private static final String NORMAL_VISIT = "Visit";
 
     @PlanningId
     private String id;
     private String name;
+    private String visit_type;
     private Location location;
     private int demand;
     private LocalDateTime minStartTime;
@@ -49,10 +52,22 @@ public class Visit {
     public Visit() {
     }
 
+    public Visit(String id, String name, Location location, LocalDateTime floatingBreakTriggerTime, Duration floatingBreakDuration) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.visit_type = BREAK_VISIT;
+        this.demand = 0;
+        this.minStartTime = floatingBreakTriggerTime;
+        this.maxEndTime = null;
+        this.serviceDuration = floatingBreakDuration;
+    }
+
     public Visit(String id, String name, Location location, int demand,
                  LocalDateTime minStartTime, LocalDateTime maxEndTime, Duration serviceDuration) {
         this.id = id;
         this.name = name;
+        this.visit_type = NORMAL_VISIT;
         this.location = location;
         this.demand = demand;
         this.minStartTime = minStartTime;
@@ -154,13 +169,16 @@ public class Visit {
 
     @JsonIgnore
     public boolean isServiceFinishedAfterMaxEndTime() {
+        if (visit_type == BREAK_VISIT) {
+            return false;
+        } 
         return arrivalTime != null
                 && arrivalTime.plus(serviceDuration).isAfter(maxEndTime);
     }
 
     @JsonIgnore
     public long getServiceFinishedDelayInMinutes() {
-        if (arrivalTime == null) {
+        if (arrivalTime == null || visit_type == BREAK_VISIT) {
             return 0;
         }
         return roundDurationToNextOrEqualMinutes(Duration.between(maxEndTime, arrivalTime.plus(serviceDuration)));
