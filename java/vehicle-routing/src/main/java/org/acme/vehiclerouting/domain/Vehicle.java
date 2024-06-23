@@ -31,6 +31,7 @@ public class Vehicle {
 
     private LocalDateTime floatingBreakTriggerTime;
     private Duration floatingBreakDuration;
+    private LocalDateTime floatingBreakStartTime;
 
     @JsonIdentityReference(alwaysAsId = true)
     @PlanningListVariable
@@ -120,6 +121,14 @@ public class Vehicle {
 
     public void setFloatingBreakDuration(Duration floatingBreakDuration) {
         this.floatingBreakDuration = floatingBreakDuration;
+    }
+
+    public LocalDateTime getFloatingBreakStartTime() {
+        return floatingBreakStartTime;
+    }
+
+    public void setFloatingBreakStartTime(LocalDateTime floatingBreakStartTime) {
+        this.floatingBreakStartTime = floatingBreakStartTime;
     }
 
     // ************************************************************************

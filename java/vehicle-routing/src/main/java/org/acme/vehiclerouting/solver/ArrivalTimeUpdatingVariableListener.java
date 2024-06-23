@@ -41,7 +41,7 @@ public class ArrivalTimeUpdatingVariableListener implements VariableListener<Veh
         LocalDateTime arrivalTime = calculateArrivalTime(nextVisit, departureTime);
 
         boolean isFirstVisitAfterTriggerTime = 
-            (floatingBreakTriggerTime == null || arrivalTime.isAfter(floatingBreakTriggerTime)) ? true : false;
+            (floatingBreakTriggerTime == null || arrivalTime.isAfter(floatingBreakTriggerTime) || arrivalTime.isEqual(floatingBreakTriggerTime)) ? true : false;
         boolean firstVisitAfterTriggerTimeFound = isFirstVisitAfterTriggerTime;
 
         LocalDateTime effectiveArrivalTime = calculateEffectiveArrivalTime(nextVisit, arrivalTime, isFirstVisitAfterTriggerTime);
@@ -57,7 +57,7 @@ public class ArrivalTimeUpdatingVariableListener implements VariableListener<Veh
                 effectiveArrivalTime = arrivalTime;
             } else {
                 isFirstVisitAfterTriggerTime = 
-                    arrivalTime.isAfter(floatingBreakTriggerTime) ? true : false;
+                    (arrivalTime.isAfter(floatingBreakTriggerTime) || arrivalTime.isEqual(floatingBreakTriggerTime)) ? true : false;
                 firstVisitAfterTriggerTimeFound = isFirstVisitAfterTriggerTime;
                 effectiveArrivalTime = calculateEffectiveArrivalTime(nextVisit, arrivalTime, isFirstVisitAfterTriggerTime);
             }
@@ -98,6 +98,7 @@ public class ArrivalTimeUpdatingVariableListener implements VariableListener<Veh
         if (firstArrivalAfterTriggerTime == false) {
             return arrivalTime;
         }
+        visit.getVehicle().setFloatingBreakStartTime(arrivalTime);
         return arrivalTime.plus(visit.getVehicle().getFloatingBreakDuration());
     }
 }
