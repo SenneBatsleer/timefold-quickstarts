@@ -161,11 +161,16 @@ public class VehicleRouteDemoResource {
                 .iterator();
 
         AtomicLong vehicleSequence = new AtomicLong();
-        Supplier<Vehicle> vehicleSupplier = () -> new Vehicle(
-                String.valueOf(vehicleSequence.incrementAndGet()),
-                vehicleCapacity.nextInt(),
-                new Location(latitudes.nextDouble(), longitudes.nextDouble()),
-                tomorrowAt(demoData.vehicleStartTime));
+        Supplier<Vehicle> vehicleSupplier = () -> {
+                boolean canOnlyDriveInTheMorning = random.nextBoolean();
+                LocalDateTime maxLastVisitDepartureTime = canOnlyDriveInTheMorning ? tomorrowAt(MORNING_WINDOW_END) : tomorrowAt(AFTERNOON_WINDOW_END);
+                return new Vehicle(
+                        String.valueOf(vehicleSequence.incrementAndGet()),
+                        vehicleCapacity.nextInt(),
+                        new Location(latitudes.nextDouble(), longitudes.nextDouble()),
+                        tomorrowAt(demoData.vehicleStartTime),
+                        maxLastVisitDepartureTime);
+        };
 
         List<Vehicle> vehicles = Stream.generate(vehicleSupplier)
                 .limit(demoData.vehicleCount)
