@@ -1,6 +1,8 @@
 package org.acme.vehiclerouting.domain;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,6 +138,23 @@ public class Vehicle {
 
         Visit lastVisit = visits.get(visits.size() - 1);
         return lastVisit.getDepartureTime();
+    }
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public long getLastVisitDepartureDelayInMinutes() {
+        if (visits.isEmpty()) {
+            return 0;
+        }
+        return roundDurationToNextOrEqualMinutes(Duration.between(maxLastVisitDepartureTime, getLastVisitDepartureTime()));
+    }
+
+    private static long roundDurationToNextOrEqualMinutes(Duration duration) {
+        var remainder = duration.minus(duration.truncatedTo(ChronoUnit.MINUTES));
+        var minutes = duration.toMinutes();
+        if (remainder.equals(Duration.ZERO)) {
+            return minutes;
+        }
+        return minutes + 1;
     }
 
     @Override
