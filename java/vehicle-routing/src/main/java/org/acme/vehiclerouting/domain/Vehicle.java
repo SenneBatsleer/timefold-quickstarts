@@ -29,6 +29,9 @@ public class Vehicle {
 
     private LocalDateTime maxLastVisitDepartureTime;
 
+    private LocalDateTime floatingBreakTriggerTime;
+    private Duration floatingBreakDuration;
+
     @JsonIdentityReference(alwaysAsId = true)
     @PlanningListVariable
     private List<Visit> visits;
@@ -43,20 +46,20 @@ public class Vehicle {
         this.departureTime = departureTime;
         this.maxLastVisitDepartureTime = maxLastVisitDepartureTime;
         this.visits = new ArrayList<>();
+        this.floatingBreakTriggerTime = null;
+        this.floatingBreakDuration = Duration.ZERO;
     }
 
     public Vehicle(String id, int capacity, Location homeLocation, LocalDateTime departureTime, LocalDateTime maxLastVisitDepartureTime,
-        long floatingBreakDuration, LocalDateTime floatingBreakTimeTrigger) {
+        Duration floatingBreakDuration, LocalDateTime floatingBreakTriggerTime) {
         this.id = id;
         this.capacity = capacity;
         this.homeLocation = homeLocation;
         this.departureTime = departureTime;
         this.maxLastVisitDepartureTime = maxLastVisitDepartureTime;
         this.visits = new ArrayList<>();
-        String break_id = id + "_break";
-        Visit floatingBreak = new Visit(break_id, "break", homeLocation, floatingBreakTimeTrigger, floatingBreakDuration);
-        floatingBreak.setArrivalTime(departureTime);
-        visits.add(floatingBreak);
+        this.floatingBreakTriggerTime = floatingBreakTriggerTime;
+        this.floatingBreakDuration = floatingBreakDuration;
     }
 
     public String getId() {
@@ -101,6 +104,22 @@ public class Vehicle {
 
     public void setVisits(List<Visit> visits) {
         this.visits = visits;
+    }
+
+    public LocalDateTime getFloatingBreakTriggerTime() {
+        return floatingBreakTriggerTime;
+    }
+
+    public void setFloatingBreakTriggerTime(LocalDateTime floatingBreakTriggerTime) {
+        this.floatingBreakTriggerTime = floatingBreakTriggerTime;
+    }
+
+    public Duration getFloatingBreakDuration() {
+        return floatingBreakDuration;
+    }
+
+    public void setFloatingBreakDuration(Duration floatingBreakDuration) {
+        this.floatingBreakDuration = floatingBreakDuration;
     }
 
     // ************************************************************************
