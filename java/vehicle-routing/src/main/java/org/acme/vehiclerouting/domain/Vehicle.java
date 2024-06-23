@@ -142,7 +142,7 @@ public class Vehicle {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public long getLastVisitDepartureDelayInMinutes() {
-        if (visits.isEmpty()) {
+        if (visits.isEmpty() || maxLastVisitDepartureTime.isAfter(getLastVisitDepartureTime())) {
             return 0;
         }
         return roundDurationToNextOrEqualMinutes(Duration.between(maxLastVisitDepartureTime, getLastVisitDepartureTime()));
