@@ -25,6 +25,8 @@ public class Vehicle {
 
     private LocalDateTime departureTime;
 
+    private LocalDateTime maxLastVisitDepartureTime;
+
     @JsonIdentityReference(alwaysAsId = true)
     @PlanningListVariable
     private List<Visit> visits;
@@ -32,11 +34,12 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public Vehicle(String id, int capacity, Location homeLocation, LocalDateTime departureTime) {
+    public Vehicle(String id, int capacity, Location homeLocation, LocalDateTime departureTime, LocalDateTime maxLastVisitDepartureTime) {
         this.id = id;
         this.capacity = capacity;
         this.homeLocation = homeLocation;
         this.departureTime = departureTime;
+        this.maxLastVisitDepartureTime = maxLastVisitDepartureTime;
         this.visits = new ArrayList<>();
     }
 
@@ -66,6 +69,14 @@ public class Vehicle {
 
     public LocalDateTime getDepartureTime() {
         return departureTime;
+    }
+
+    public LocalDateTime getMaxLastVisitDepartureTime() {
+        return maxLastVisitDepartureTime;
+    }
+
+    public void setMaxLastVisitDepartureTime(LocalDateTime maxLastVisitDepartureTime) {
+        this.maxLastVisitDepartureTime = maxLastVisitDepartureTime;
     }
 
     public List<Visit> getVisits() {
