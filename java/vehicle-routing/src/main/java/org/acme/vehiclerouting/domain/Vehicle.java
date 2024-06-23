@@ -128,6 +128,16 @@ public class Vehicle {
         return lastVisit.getDepartureTime().plusSeconds(lastVisit.getLocation().getDrivingTimeTo(homeLocation));
     }
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public LocalDateTime getLastVisitDepartureTime() {
+        if (visits.isEmpty()) {
+            return departureTime;
+        }
+
+        Visit lastVisit = visits.get(visits.size() - 1);
+        return lastVisit.getDepartureTime();
+    }
+
     @Override
     public String toString() {
         return id;
