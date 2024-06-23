@@ -45,6 +45,20 @@ public class Vehicle {
         this.visits = new ArrayList<>();
     }
 
+    public Vehicle(String id, int capacity, Location homeLocation, LocalDateTime departureTime, LocalDateTime maxLastVisitDepartureTime,
+        long floatingBreakDuration, LocalDateTime floatingBreakTimeTrigger) {
+        this.id = id;
+        this.capacity = capacity;
+        this.homeLocation = homeLocation;
+        this.departureTime = departureTime;
+        this.maxLastVisitDepartureTime = maxLastVisitDepartureTime;
+        this.visits = new ArrayList<>();
+        String break_id = id + "_break";
+        Visit floatingBreak = new Visit(break_id, "break", homeLocation, floatingBreakTimeTrigger, floatingBreakDuration);
+        floatingBreak.setArrivalTime(departureTime);
+        visits.add(floatingBreak);
+    }
+
     public String getId() {
         return id;
     }
