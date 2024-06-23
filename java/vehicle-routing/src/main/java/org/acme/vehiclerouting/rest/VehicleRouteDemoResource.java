@@ -162,8 +162,8 @@ public class VehicleRouteDemoResource {
 
         AtomicLong vehicleSequence = new AtomicLong();
         Supplier<Vehicle> vehicleSupplier = () -> {
-                boolean canOnlyDriveInTheMorning = random.nextBoolean();
-                LocalDateTime maxLastVisitDepartureTime = canOnlyDriveInTheMorning ? tomorrowAt(MORNING_WINDOW_END) : tomorrowAt(AFTERNOON_WINDOW_END);
+                boolean canOnlyDriveUntil4pm = random.nextBoolean();
+                LocalDateTime maxLastVisitDepartureTime = canOnlyDriveUntil4pm ? tomorrowAt(LocalTime.of(16, 0)) : tomorrowAt(LocalTime.of(18, 0));
                 return new Vehicle(
                         String.valueOf(vehicleSequence.incrementAndGet()),
                         vehicleCapacity.nextInt(),
